@@ -15,9 +15,16 @@ async function* getFiles(dir) {
       }
     }
   }
-  
+
+
+if (process.argv.length <= 2) {
+    throw Error("Folder path is required parameter.")
+}
+let folderPath = process.argv[2];
+
+//"C:\\Users\\NowFloats\\workspace\\kitsune-indiashelter-webapplication\\build\\customerlogin"
 (async () => {
-      for await (const file of getFiles("C:\\Users\\NowFloats\\workspace\\kitsune-indiashelter-webapplication\\build\\customerlogin")) {
+      for await (const file of getFiles(folderPath)) {
           let extensionName = path.extname(file);
           console.log(file);
         if (extensionName == ".js") {
