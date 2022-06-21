@@ -34,7 +34,7 @@ const optimize = async (saveFileName, data) => {
 
 
 async function minifyJS(filePath) {
-    return await minify({compressor: gcc, input: filePath, output: filePath});
+    return await minify({compressor: uglifyjs, input: filePath, output: filePath});
 }
 
 async function minifyHTML(filePath) {

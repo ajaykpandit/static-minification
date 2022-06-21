@@ -25,8 +25,7 @@ let folderPath = process.argv[2];
 //"C:\\Users\\NowFloats\\workspace\\kitsune-indiashelter-webapplication\\build\\customerlogin"
 (async () => {
       for await (const file of getFiles(folderPath)) {
-          let extensionName = path.extname(file);
-          console.log(file);
+        let extensionName = path.extname(file);
         if (extensionName == ".js") {
             try {
                 await minifyJS(file);
