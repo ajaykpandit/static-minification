@@ -38,6 +38,3 @@ jobs:
                   IMAGE_ENV: ${{steps.vars.outputs.build_env}}
               run: |
                     docker build -t $IMAGE_TAG . --build-arg env=$IMAGE_ENV
-            - name: Log out of Amazon ECR
-              if: always()
-              run: docker logout $ECR_REGISTRY
