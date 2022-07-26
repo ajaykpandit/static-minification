@@ -1,4 +1,4 @@
-FROM node:14.18-alpine
+FROM node:18-alpine
 
 RUN apk add g++ make python3 bash libltdl
 
@@ -15,9 +15,9 @@ COPY . .
 
 COPY .env.${env} .env
 
-RUN npm install -g npm@latest
+# RUN npm install -g npm@latest
 
-RUN npm install
+RUN npm update
 
 EXPOSE 80
 
