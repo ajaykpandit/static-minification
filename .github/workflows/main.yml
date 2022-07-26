@@ -3,23 +3,52 @@ name: Deployment
 on:
   workflow_dispatch:
     inputs:
+      build_tag:
+        required: true
+        default: v2.1.10-beta
+        description: enter build version ie v2.x.x-beta
+        
       environment:
         type: choice
         description: Choose deployment environment
         options:
-        - production
-        - uat
-        - qa
         - integration
         - staging
+        - uat
+        - qa
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        name: Build Images
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout source code
+              uses: actions/checkout@v2
 
-    steps:
-      - uses: actions/checkout@v2
+            - name: Get Environment
+              id: vars
+              run: |
+                    echo ::set-output name=build_env::${{ github.event.inputs.environment }}
+                    echo ::set-output name=build_tag::${{ github.event.inputs.build_tag }}
 
-      - name: deployment
-        run: | 
-          echo "choice is ${{ github.event.inputs.environment }}" / ${{ inputs.environment }}
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              # with:
+                  # aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+                  # aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+                  # aws-region: ap-south-1
+
+            - name: Login to ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: Build, Tag and Deploy Image
+              env:
+                  # IMAGE_TAG: ${{steps.login-ecr.outputs.image_tag}}
+                  IMAGE_TAG: ${{steps.vars.outputs.build_tag}}
+                  IMAGE_ENV: ${{steps.vars.outputs.build_env}}
+              run: |
+                    docker build -t $IMAGE_TAG . --build-arg env=$IMAGE_ENV
+            - name: Log out of Amazon ECR
+              if: always()
+              run: docker logout $ECR_REGISTRY
