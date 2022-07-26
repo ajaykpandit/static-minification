@@ -1,6 +1,6 @@
 FROM node:14.18-alpine
 
-RUN apk add g++ make python3
+RUN apk add g++ make python3 bash libltdl
 
 # Select passed environment from argument
 ARG env
