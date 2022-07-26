@@ -22,4 +22,4 @@ jobs:
 
       - name: deployment
         run: | 
-          echo "choice is ${{ github.event.inputs.choice }}" / ${{ inputs.choice }}
+          echo "choice is ${{ github.event.inputs.environment }}" / ${{ inputs.environment }}
